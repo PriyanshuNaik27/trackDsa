@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 const Question = require("../models/question.model")
+const bcrypt = require('bcryptjs');
+
 
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
@@ -69,14 +71,10 @@ const login = async (req, res) => {
     }
 
     // Verify password
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password'
-      });
-    }
-
+    const isMatch = await bcrypt.compare(password, user.password); // password check
+if (!isMatch) {
+  return res.status(400).json({ message: 'Invalid credentials' });
+}
     // Generate JWT token 
     const token = jwt.sign(
       { 
@@ -88,22 +86,12 @@ const login = async (req, res) => {
     );
 
     // Remove password from response
-    const userResponse = user.toObject();
-    delete userResponse.password;
+    
 
-    res.status(200).json({
-      success: true,
-      data: {
-        ...userResponse,
-        token
-      }
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    return res.json({ data: { token } });
+} catch (error) {
+  console.error(error); // Log the error for debugging
+  res.status(500).json({ message: 'Server error' });
   }
 };
 
