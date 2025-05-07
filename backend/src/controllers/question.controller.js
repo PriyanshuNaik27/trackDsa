@@ -43,7 +43,7 @@ const getMyQuestions = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      questions: user.Questions,
+      data: user.Questions,
     });
   } catch (error) {
     res.status(500).json({
