@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const Dashboard = () => {
   const token = localStorage.getItem('token');
@@ -63,6 +64,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
+      <Navbar></Navbar>
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-center">📘 DSA Tracker Dashboard</h2>
 
