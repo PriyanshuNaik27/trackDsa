@@ -6,7 +6,10 @@ const User = require('../models/user.model');
 // @access  Private
 const createQuestion = async (req, res) => {
   try {
-    const { questionName, url, rating, review, solvedDate } = req.body;
+    const { questionName, url, rating, review, solvedDate,tags } = req.body;
+    if (!Array.isArray(tags)) {
+      return res.status(400).json({ success: false, message: 'Tags must be an array' });
+    }
 
     const question = await Question.create({
       questionName,
@@ -14,6 +17,7 @@ const createQuestion = async (req, res) => {
       rating,
       review,
       solvedDate,
+      tags,
     });
 
     // Add to user's tracker
@@ -27,6 +31,7 @@ const createQuestion = async (req, res) => {
       data: question,
     });
   } catch (error) {
+     console.error('Error saving question:', error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -39,7 +44,11 @@ const createQuestion = async (req, res) => {
 // @access  Private
 const getMyQuestions = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate('Questions');
+    const tag = req.query.tag;
+    const user = await User.findById(req.user._id).populate({
+      path: 'Questions',
+      match: tag ? {tags:tag} :{},
+    });
 
     res.status(200).json({
       success: true,
@@ -53,7 +62,37 @@ const getMyQuestions = async (req, res) => {
   }
 };
 
+
+// ✅ @desc    Get all unique tags for the logged-in user
+// ✅ @route   GET /api/questions/tags
+// ✅ @access  Private
+const getAllTagsForUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('Questions');
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Flatten all tags from user's questions
+    const allTags = user.Questions.flatMap(q => q.tags || []);
+    const uniqueTags = [...new Set(allTags.map(tag => tag.toLowerCase().trim()))];
+
+    res.status(200).json({
+      success: true,
+      tags: uniqueTags,
+    });
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+    });
+  }
+};
+
 module.exports = {
   createQuestion,
   getMyQuestions,
+  getAllTagsForUser, 
 };

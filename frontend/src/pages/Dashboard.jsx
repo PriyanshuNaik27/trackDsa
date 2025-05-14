@@ -10,12 +10,26 @@ const Dashboard = () => {
   const [review, setReview] = useState('');
   const [solvedDate, setSolvedDate] = useState('');
   const [questions, setQuestions] = useState([]);
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/questions/tags', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setTags(response.data.tags || []);
+      } catch (err) {
+        console.error('Error fetching tags:', err);
+      }
+    };
     const fetchQuestions = async () => {
       setLoading(true);
+
+
       try {
         const response = await axios.get('http://localhost:5000/api/questions', {
           headers: { Authorization: `Bearer ${token}` },
@@ -33,26 +47,46 @@ const Dashboard = () => {
       }
     };
 
-    if (token) fetchQuestions();
+    if (token) {
+      fetchQuestions();
+      fetchTags();
+    }
     else setError('No token found.');
   }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clean and format tags
+    const cleanTags = tagInput
+      .split(',')
+      .map(tag => tag.trim().toLowerCase())
+      .filter(tag => tag !== '');
+
     try {
       const response = await axios.post(
         'http://localhost:5000/api/questions',
-        { questionName, url, rating, review, solvedDate },
+        {
+          questionName,
+          url,
+          rating,
+          review,
+          solvedDate,
+          tags: cleanTags
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.data) {
-        setQuestions(prevQuestions => [...prevQuestions, response.data.data]);
+        setQuestions(prev => [...prev, response.data.data]);
         setQuestionName('');
         setUrl('');
         setRating(0);
         setReview('');
+        setTags([]);         // Optional: if you display `tags` somewhere
+        setTagInput('');     // ✅ Clear tag input field after submit
         setSolvedDate('');
+        setError('');
       } else {
         setError('Invalid response format');
       }
@@ -61,6 +95,8 @@ const Dashboard = () => {
       console.error('Error adding question:', error);
     }
   };
+
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -83,6 +119,18 @@ const Dashboard = () => {
                     id="questionName"
                     value={questionName}
                     onChange={(e) => setQuestionName(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="tags" className="block text-sm font-medium text-gray-600">Tags</label>
+                  <input
+                    type="text"
+                    id="tag"
+                    placeholder='enter tags separated by commas'
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                     required
                   />
@@ -145,6 +193,25 @@ const Dashboard = () => {
                 ➕ Add Question
               </button>
             </form>
+            {/* User's Tags */}
+            <div className="my-4">
+              <h3 className="text-md font-semibold mb-2">Your Tags:</h3>
+              {tags.length === 0 ? (
+                <p className="text-gray-500">No tags yet.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
 
             <hr className="my-6" />
 
@@ -158,6 +225,7 @@ const Dashboard = () => {
                   <a href={q.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-sm">
                     View Question
                   </a>
+                  <p>Tags: {q.tags.join(', ')}</p> {/* Display the tags */}
                   <p className="text-sm mt-2 text-gray-700">Review: {q.review}</p>
                 </li>
               ))}

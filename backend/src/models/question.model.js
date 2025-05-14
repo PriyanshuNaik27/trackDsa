@@ -23,7 +23,11 @@ const QuestionSchema = new mongoose.Schema({
   },
   solvedDate: {
     type: Date,
-    required: true
+    default: [],
+  },
+  tags :{
+    type:[String],
+    default:[],
   }
 }, { timestamps: true });
 
