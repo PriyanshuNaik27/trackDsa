@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const QuestionByTag = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
@@ -15,7 +15,7 @@ const QuestionByTag = () => {
     const fetchQuestionsByTag = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/questions?tag=${tag}`, {
+        const response = await fetch(`${apiUrl}/api/questions?tag=${tag}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
