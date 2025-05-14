@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+
+
   const [questionName, setQuestionName] = useState('');
   const [url, setUrl] = useState('');
   const [rating, setRating] = useState(0);
@@ -15,6 +19,8 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
+
+  // Redirect to login if token is not present
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -28,8 +34,6 @@ const Dashboard = () => {
     };
     const fetchQuestions = async () => {
       setLoading(true);
-
-
       try {
         const response = await axios.get('http://localhost:5000/api/questions', {
           headers: { Authorization: `Bearer ${token}` },
@@ -54,6 +58,9 @@ const Dashboard = () => {
     else setError('No token found.');
   }, [token]);
 
+
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -94,6 +101,11 @@ const Dashboard = () => {
       setError('Error adding question');
       console.error('Error adding question:', error);
     }
+  };
+  // Handle tag click to filter questions
+  // This function will navigate to the questions page with the selected tag as a query parameter
+  const handleTagClick = (tag) => {
+    navigate(`/questions?tag=${tag}`);
   };
 
 
@@ -201,12 +213,13 @@ const Dashboard = () => {
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag, index) => (
-                    <span
+                    <button
+                      onClick={() => handleTagClick(tag)}
                       key={index}
                       className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm"
                     >
                       {tag}
-                    </span>
+                    </button>
                   ))}
                 </div>
               )}

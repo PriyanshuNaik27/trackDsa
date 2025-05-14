@@ -91,8 +91,38 @@ const getAllTagsForUser = async (req, res) => {
   }
 };
 
+// @desc    Get all questions by tag
+// @route   GET /api/questions/:tag
+// @access  Private
+const getQuestionsByTag = async (req, res) => {
+  try {
+    const { tag } = req.query;  // Use req.query for query parameters
+    if (!tag) {
+      return res.status(400).json({ success: false, message: 'Tag is required' });
+    }
+    
+    const questions = await Question.find({ tags: tag });
+    if (!questions || questions.length === 0) {
+      return res.status(404).json({ success: false, message: 'No questions found for this tag' });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: questions,
+    });
+  } catch (error) {
+    console.error('Error fetching questions by tag:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+    });
+  }
+}
+
+
 module.exports = {
   createQuestion,
   getMyQuestions,
   getAllTagsForUser, 
+  getQuestionsByTag,
 };
