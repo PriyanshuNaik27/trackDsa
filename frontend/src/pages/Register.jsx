@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+const apiUrl = import.meta.env.VITE_API_URL; // Ensure this is set correctly in your .env file
 
 const Register = ({ setToken }) => {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Register = ({ setToken }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { fullName, email, password });
+      const response = await axios.post(`${apiUrl}/api/auth/register`, { fullName, email, password });
       setToken(response.data.data.token);  // Save the JWT token
       localStorage.setItem('token', response.data.data.token); 
       navigate('/dashboard'); // Store token in localStorage

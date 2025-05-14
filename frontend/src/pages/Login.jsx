@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = ({ setToken }) => {
     const navigate = useNavigate();
@@ -10,12 +11,10 @@ const Login = ({ setToken }) => {
   const [errorMessage, setErrorMessage] = useState('');
   
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const response = await axios.post(`${apiUrl}/api/auth/login`, { email, password });
       console.log(response);  // Log the entire response object
   
       const token = response?.data?.data?.token; // Ensure you're accessing the token correctly

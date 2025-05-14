@@ -2,6 +2,9 @@ import  { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 
 const Dashboard = () => {
   const token = localStorage.getItem('token');
@@ -24,7 +27,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/questions/tags', {
+        const response = await axios.get(`${apiUrl}/api/questions/tags`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTags(response.data.tags || []);
@@ -35,7 +38,7 @@ const Dashboard = () => {
     const fetchQuestions = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/questions', {
+        const response = await axios.get(`${apiUrl}/api/questions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data && Array.isArray(response.data.data)) {
@@ -72,7 +75,7 @@ const Dashboard = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/questions',
+        `${apiUrl}/api/questions`,
         {
           questionName,
           url,
