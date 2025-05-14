@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-const apiUrl = import.meta.env.VITE_API_URL; // Ensure this is set correctly in your .env file
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = ({ setToken }) => {
     const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
-
   
 
   const handleSubmit = async (e) => {
