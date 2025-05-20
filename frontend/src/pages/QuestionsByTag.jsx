@@ -1,11 +1,14 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import loadingSpinner from '../components/LoadingSpinner';
+
+
 const apiUrl = import.meta.env.VITE_API_URL;
 const QuestionByTag = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const tag = query.get('tag');
-  
+
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,7 +44,7 @@ const QuestionByTag = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-semibold mb-4 text-gray-800">Questions tagged with: <span className="text-blue-600">{tag}</span></h1>
-      {loading && <p className="text-center text-gray-500">Loading...</p>}
+      {loading && <LoadingSpinner />}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && (
         <ul className="space-y-6">

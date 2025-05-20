@@ -1,44 +1,45 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = ({ setToken }) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage('');
     try {
       const response = await axios.post(`${apiUrl}/api/auth/login`, { email, password });
-      console.log(response);  // Log the entire response object
-  
-      const token = response?.data?.data?.token; // Ensure you're accessing the token correctly
-      // Check if the token is being received
-  
+      const token = response?.data?.data?.token;
       if (token) {
-        setToken(token);  // Save token in state
-        localStorage.setItem('token', token);  // Save in localStorage
-        navigate('/dashboard'); // ✅ Redirect to dashboard
+        setToken(token);
+        localStorage.setItem('token', token);
+        navigate('/dashboard');
       } else {
         setErrorMessage('No token found in response');
       }
     } catch (error) {
       setErrorMessage('Invalid email or password');
-      console.error('Login error:', error);  // Log the error for debugging
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <div className="w-full max-w-sm p-8 space-y-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center">Login</h2>
         {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+        {loading && <LoadingSpinner />}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
@@ -49,6 +50,7 @@ const Login = ({ setToken }) => {
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
+              disabled={loading}
             />
           </div>
           <div className="mb-6">
@@ -60,10 +62,15 @@ const Login = ({ setToken }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">
-            Login
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <p className="mt-4 text-center text-sm">

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 const apiUrl = import.meta.env.VITE_API_URL;
+import LoadingSpinner from '../components/LoadingSpinner';
 
 
 
@@ -122,7 +123,7 @@ const Dashboard = () => {
         {error && <p className="text-red-500 text-center">{error}</p>}
 
         {loading ? (
-          <p className="text-center">Loading questions...</p>
+          <LoadingSpinner />
         ) : (
           <>
             <form onSubmit={handleSubmit} className="space-y-4">
