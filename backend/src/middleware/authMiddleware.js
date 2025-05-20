@@ -8,10 +8,9 @@ const protect = async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
-    try {
-      // Get token from header
-      token = req.headers.authorization.split(' ')[1];
+    token = req.headers.authorization.split(' ')[1];
 
+    try {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -25,7 +24,7 @@ const protect = async (req, res, next) => {
         });
       }
 
-      next();
+      return next();
 
     } catch (error) {
       return res.status(401).json({
@@ -35,12 +34,11 @@ const protect = async (req, res, next) => {
     }
   }
 
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Not authorized, no token'
-    });
-  }
+  // If no token at all
+  return res.status(401).json({
+    success: false,
+    message: 'Not authorized, no token'
+  });
 };
 
 module.exports = { protect };
