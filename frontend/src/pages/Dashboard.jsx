@@ -1,16 +1,13 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 const apiUrl = import.meta.env.VITE_API_URL;
 import LoadingSpinner from '../components/LoadingSpinner';
 
-
-
 const Dashboard = () => {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
-
 
   const [questionName, setQuestionName] = useState('');
   const [url, setUrl] = useState('');
@@ -23,8 +20,6 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
-
-  // Redirect to login if token is not present
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -58,17 +53,11 @@ const Dashboard = () => {
     if (token) {
       fetchQuestions();
       fetchTags();
-    }
-    else setError('No token found.');
+    } else setError('No token found.');
   }, [token]);
 
-
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Clean and format tags
     const cleanTags = tagInput
       .split(',')
       .map(tag => tag.trim().toLowerCase())
@@ -94,8 +83,8 @@ const Dashboard = () => {
         setUrl('');
         setRating(0);
         setReview('');
-        setTags([]);         // Optional: if you display `tags` somewhere
-        setTagInput('');     // ✅ Clear tag input field after submit
+        setTags([]);
+        setTagInput('');
         setSolvedDate('');
         setError('');
       } else {
@@ -106,67 +95,62 @@ const Dashboard = () => {
       console.error('Error adding question:', error);
     }
   };
-  // Handle tag click to filter questions
-  // This function will navigate to the questions page with the selected tag as a query parameter
+
   const handleTagClick = (tag) => {
     navigate(`/questions?tag=${tag}`);
   };
 
-
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <Navbar></Navbar>
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-6 text-center">📘 DSA Tracker Dashboard</h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+      <Navbar />
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
+        <h2 className="text-3xl font-bold mb-8 text-center text-indigo-700">📘 DSA Tracker Dashboard</h2>
 
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         {loading ? (
           <LoadingSpinner />
         ) : (
           <>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Improved Form */}
+            <form onSubmit={handleSubmit} className="space-y-6 bg-indigo-50 p-6 rounded-xl shadow mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="questionName" className="block text-sm font-medium text-gray-600">Question Name</label>
+                  <label htmlFor="questionName" className="block text-sm font-semibold text-indigo-700 mb-1">Question Name</label>
                   <input
                     type="text"
                     id="questionName"
                     value={questionName}
                     onChange={(e) => setQuestionName(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="tags" className="block text-sm font-medium text-gray-600">Tags</label>
+                  <label htmlFor="tags" className="block text-sm font-semibold text-indigo-700 mb-1">Tags</label>
                   <input
                     type="text"
                     id="tag"
-                    placeholder='enter tags separated by commas'
+                    placeholder="Enter tags separated by commas"
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="url" className="block text-sm font-medium text-gray-600">URL</label>
+                  <label htmlFor="url" className="block text-sm font-semibold text-indigo-700 mb-1">URL</label>
                   <input
                     type="url"
                     id="url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
                     required
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="rating" className="block text-sm font-medium text-gray-600">Rating (1-5)</label>
+                  <label htmlFor="rating" className="block text-sm font-semibold text-indigo-700 mb-1">Rating (1-5)</label>
                   <input
                     type="number"
                     id="rating"
@@ -174,44 +158,43 @@ const Dashboard = () => {
                     max="5"
                     value={rating}
                     onChange={(e) => setRating(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="solvedDate" className="block text-sm font-medium text-gray-600">Solved Date</label>
+                  <label htmlFor="solvedDate" className="block text-sm font-semibold text-indigo-700 mb-1">Solved Date</label>
                   <input
                     type="date"
                     id="solvedDate"
                     value={solvedDate}
                     onChange={(e) => setSolvedDate(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
                     required
                   />
                 </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="review" className="block text-sm font-semibold text-indigo-700 mb-1">Review</label>
+                  <textarea
+                    id="review"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                    className="block w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition"
+                    rows={3}
+                  ></textarea>
+                </div>
               </div>
-
-              <div>
-                <label htmlFor="review" className="block text-sm font-medium text-gray-600">Review</label>
-                <textarea
-                  id="review"
-                  value={review}
-                  onChange={(e) => setReview(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  rows={3}
-                ></textarea>
-              </div>
-
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition"
               >
                 ➕ Add Question
               </button>
             </form>
+
             {/* User's Tags */}
-            <div className="my-4">
-              <h3 className="text-md font-semibold mb-2">Your Tags:</h3>
+            <div className="my-6">
+              <h3 className="text-md font-semibold mb-2 text-indigo-700">Your Tags:</h3>
               {tags.length === 0 ? (
                 <p className="text-gray-500">No tags yet.</p>
               ) : (
@@ -220,7 +203,7 @@ const Dashboard = () => {
                     <button
                       onClick={() => handleTagClick(tag)}
                       key={index}
-                      className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm"
+                      className="px-3 py-1 bg-indigo-200 text-indigo-800 rounded-full text-sm hover:bg-indigo-300 transition"
                     >
                       {tag}
                     </button>
@@ -229,24 +212,51 @@ const Dashboard = () => {
               )}
             </div>
 
+            <hr className="my-8" />
 
-            <hr className="my-6" />
-
-            <h3 className="text-xl font-semibold mb-4">📋 Your Questions</h3>
-            <ul className="space-y-4">
-              {questions.length === 0 && <p>No questions added yet.</p>}
-              {questions.map((q) => (
-                <li key={q._id} className="bg-gray-50 p-4 rounded shadow-sm border border-gray-200">
-                  <h4 className="font-semibold text-lg">{q.questionName}</h4>
-                  <p className="text-sm text-gray-600">Rating: {q.rating} | Date: {q.solvedDate}</p>
-                  <a href={q.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-sm">
-                    View Question
-                  </a>
-                  <p>Tags: {q.tags.join(', ')}</p> {/* Display the tags */}
-                  <p className="text-sm mt-2 text-gray-700">Review: {q.review}</p>
-                </li>
-              ))}
-            </ul>
+            {/* Questions Table */}
+            <h3 className="text-xl font-semibold mb-4 text-indigo-700">📋 Your Questions</h3>
+            {questions.length === 0 ? (
+              <p className="text-gray-500">No questions added yet.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-indigo-200 rounded-lg">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">Name</th>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">Review</th>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">Rating</th>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">Solved Date</th>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">Tags</th>
+                      <th className="px-4 py-2 border-b text-left text-indigo-700">URL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {questions.map((q) => (
+                      <tr key={q._id} className="hover:bg-indigo-50">
+                        <td className="px-4 py-2 border-b">{q.questionName}</td>
+                        <td className="px-4 py-2 border-b">{q.review}</td>
+                        <td className="px-4 py-2 border-b">{q.rating}</td>
+                        <td className="px-4 py-2 border-b">
+                          {q.solvedDate ? new Date(q.solvedDate).toLocaleDateString() : ''}
+                        </td>
+                        <td className="px-4 py-2 border-b">{q.tags.join(', ')}</td>
+                        <td className="px-4 py-2 border-b">
+                          <a
+                            href={q.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-indigo-600 hover:underline text-sm"
+                          >
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </>
         )}
       </div>
