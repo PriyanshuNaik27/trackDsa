@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
+import Review from '../components/Review';
 const apiUrl = import.meta.env.VITE_API_URL;
+import { FaRegCommentDots } from "react-icons/fa"
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Dashboard = () => {
@@ -20,17 +22,21 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // this will fetch tags when there is wuestiontags added or on mount
+  const fetchTags = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/questions/tags`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTags(response.data.tags || []);
+    } catch (err) {
+      console.error('Error fetching tags:', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/api/questions/tags`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTags(response.data.tags || []);
-      } catch (err) {
-        console.error('Error fetching tags:', err);
-      }
-    };
+
+
     const fetchQuestions = async () => {
       setLoading(true);
       try {
@@ -87,6 +93,7 @@ const Dashboard = () => {
         setTagInput('');
         setSolvedDate('');
         setError('');
+        fetchTags(); // Fetch tags again to update the list
       } else {
         setError('Invalid response format');
       }
@@ -103,7 +110,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
       <Navbar />
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
+      <main className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
         <h2 className="text-3xl font-bold mb-8 text-center text-indigo-700">📘 DSA Tracker Dashboard</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -193,7 +200,7 @@ const Dashboard = () => {
             </form>
 
             {/* User's Tags */}
-            <div className="my-6">
+            <section className="my-6">
               <h3 className="text-md font-semibold mb-2 text-indigo-700">Your Tags:</h3>
               {tags.length === 0 ? (
                 <p className="text-gray-500">No tags yet.</p>
@@ -210,56 +217,62 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </section>
 
             <hr className="my-8" />
 
             {/* Questions Table */}
-            <h3 className="text-xl font-semibold mb-4 text-indigo-700">📋 Your Questions</h3>
-            {questions.length === 0 ? (
-              <p className="text-gray-500">No questions added yet.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-indigo-200 rounded-lg">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">Name</th>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">Review</th>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">Rating</th>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">Solved Date</th>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">Tags</th>
-                      <th className="px-4 py-2 border-b text-left text-indigo-700">URL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {questions.map((q) => (
-                      <tr key={q._id} className="hover:bg-indigo-50">
-                        <td className="px-4 py-2 border-b">{q.questionName}</td>
-                        <td className="px-4 py-2 border-b">{q.review}</td>
-                        <td className="px-4 py-2 border-b">{q.rating}</td>
-                        <td className="px-4 py-2 border-b">
-                          {q.solvedDate ? new Date(q.solvedDate).toLocaleDateString() : ''}
-                        </td>
-                        <td className="px-4 py-2 border-b">{q.tags.join(', ')}</td>
-                        <td className="px-4 py-2 border-b">
-                          <a
-                            href={q.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-indigo-600 hover:underline text-sm"
-                          >
-                            View
-                          </a>
-                        </td>
+            <section>
+              <h3 className="text-xl font-semibold mb-4 text-indigo-700">📋 Your Questions</h3>
+              {questions.length === 0 ? (
+                <p className="text-gray-500">No questions added yet.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white border border-indigo-200 rounded-lg">
+                    <thead>
+                      <tr>
+                        <th className="px-4 py-2 border-b text-left text-indigo-700">Name</th>
+                        <th className="px-4 py-2 border-b text-center text-indigo-700">
+                          <span className="flex items-center justify-center gap-1">
+                            Review <FaRegCommentDots className="inline text-indigo-500" />
+                          </span>
+                        </th>
+                        <th className="px-4 py-2 border-b text-left text-indigo-700">Rating</th>
+                        <th className="px-4 py-2 border-b text-left text-indigo-700">Solved Date</th>
+                        <th className="px-4 py-2 border-b text-left text-indigo-700">Tags</th>
+                        <th className="px-4 py-2 border-b text-left text-indigo-700">URL</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                    </thead>
+                    <tbody>
+                      {questions.map((q) => (
+                        <tr key={q._id} className="hover:bg-indigo-50">
+                          <td className="px-4 py-2 border-b">{q.questionName}</td>
+                          <td className="px-4 py-2 border-b text-center"><Review text={q.review} /></td>
+                          <td className="px-4 py-2 border-b">{q.rating}</td>
+                          <td className="px-4 py-2 border-b">
+                            {q.solvedDate ? new Date(q.solvedDate).toLocaleDateString() : ''}
+                          </td>
+                          <td className="px-4 py-2 border-b">{q.tags.join(', ')}</td>
+                          <td className="px-4 py-2 border-b">
+                            <a
+                              href={q.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-indigo-600 hover:underline text-sm"
+                            >
+                              View
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 };

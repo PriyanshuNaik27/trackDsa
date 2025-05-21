@@ -5,6 +5,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard';
 import Navbar from '../components/Navbar';
+import UpcomingContest from '../pages/UpcomingContest';
 import QuestionsByTag from "../pages/QuestionsByTag";
 
 const AppRouter = ({ token, setToken }) => {
@@ -25,9 +26,9 @@ const AppRouter = ({ token, setToken }) => {
           path="/dashboard"
           element={token ? <Dashboard /> : <Navigate to="/login" />}
         />
-
         <Route path="/questions" element={<QuestionsByTag />} />
-        
+        <Route path="/UpcomingContests" element={<UpcomingContest />} />
+
         {/* 404 Page Not Found */}
         <Route path="*" element={<div className="p-8 text-center text-xl text-red-500">404 - Page Not Found</div>} />
       </Routes>

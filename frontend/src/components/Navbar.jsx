@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import UpcomingContest from '../pages/UpcomingContest';
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
@@ -46,6 +48,9 @@ const Navbar = () => {
         ) : (
           <p>Welcome, {userName} </p>
         )}
+      </div>
+      <div>
+      <Link to="/Upcomingcontests">Upcoming Contests</Link>
       </div>
       {token && (
         <button onClick={handleLogout} style={{ padding: '0.5rem 1rem', background: '#e53e3e', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>

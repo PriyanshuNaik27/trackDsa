@@ -5,9 +5,9 @@ const App = () => {
   const [token, setToken] = useState(() => localStorage.getItem('token') || ''); // Initialize token from localStorage
 
   return (
-    <div>
+  
       <Router token={token} setToken={setToken} />
-    </div>
+  
   );
 };
 export default App;
