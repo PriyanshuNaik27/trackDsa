@@ -1,6 +1,8 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Review from '../components/Review';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const QuestionByTag = () => {
@@ -13,6 +15,7 @@ const QuestionByTag = () => {
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
   const token = localStorage.getItem('token');
+  const [review, setReview] = useState('');
 
   useEffect(() => {
     if (darkMode) {
@@ -50,61 +53,74 @@ const QuestionByTag = () => {
   }, [tag, token]);
 
   return (
-    <div className={`max-w-6xl mx-auto p-6 shadow-lg rounded-lg transition-colors duration-300 ${darkMode ? "bg-gray-900" : "bg-white"}`}>
-      <h1 className={`text-2xl font-semibold mb-6 ${darkMode ? "text-indigo-200" : "text-gray-800"}`}>
-        Questions tagged with: <span className={darkMode ? "text-indigo-400" : "text-blue-600"}>{tag}</span>
-      </h1>
-      {loading && <LoadingSpinner />}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      {!loading && !error && (
-        <div className="overflow-x-auto">
-          <table className={`min-w-full border rounded-lg ${darkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"}`}>
-            <thead>
-              <tr>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Name</th>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Review</th>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Rating</th>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Solved Date</th>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Tags</th>
-                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>URL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {questions.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className={`text-center py-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                    No questions found for this tag.
-                  </td>
-                </tr>
-              ) : (
-                questions.map((question) => (
-                  <tr key={question._id} className={darkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"}>
-                    <td className="px-4 py-2 border-b">{question.questionName}</td>
-                    <td className="px-4 py-2 border-b">{question.review}</td>
-                    <td className="px-4 py-2 border-b">{question.rating}</td>
-                    <td className="px-4 py-2 border-b">
-                      {new Date(question.solvedDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-2 border-b">{question.tags.join(', ')}</td>
-                    <td className="px-4 py-2 border-b">
-                      <a
-                        href={question.url}
-                        className={`hover:underline text-sm ${darkMode ? "text-indigo-300" : "text-blue-500"}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Link
-                      </a>
-                    </td>
+    <>
+      <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
+      <div className={`min-h-screen border p-8 bg-gradient-to-br ${darkMode ? 'from-gray-900 to-gray-800' : 'from-blue-50 to-indigo-100'} transition-colors duration-300`}>
+        <main className={`max-w-6xl mx-auto border ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white'} p-8 rounded-2xl shadow-2xl`}>
+          <h1 className={`text-2xl font-bold mb-8 text-center ${darkMode ? "text-indigo-300" : "text-indigo-700"}`}>
+            Questions tagged with: <span className={darkMode ? "text-indigo-400" : "text-blue-600"}>{tag}</span>
+          </h1>
+          {loading && <LoadingSpinner />}
+          {error && <p className="text-center text-red-500">{error}</p>}
+          {!loading && !error && (
+            <div className="overflow-x-auto">
+              <table className={`min-w-full border rounded-lg ${darkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"}`}>
+                <thead>
+                  <tr>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>Name</th>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>Review</th>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>Rating</th>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>Solved Date</th>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>Tags</th>
+                    <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-indigo-700"}`}>URL</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+                </thead>
+                <tbody>
+                  {questions.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className={`text-center py-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                        No questions found for this tag.
+                      </td>
+                    </tr>
+                  ) : (
+                    questions.map((question) => (
+                      <tr key={question._id} className={`transition-colors duration-200 ${darkMode ? "hover:bg-indigo-950 bg-gray-900 border-gray-800" : "hover:bg-indigo-50 bg-white border-indigo-100"}`}>
+                        <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800 text-indigo-100" : "border-indigo-100 text-gray-800"}`}>
+                          {question.questionName}
+                        </td>
+                       <td className={`px-4 py-2 border-b text-center ${darkMode ? "border-gray-800" : "border-indigo-100"}`}>
+                              <Review questionName={question.questionName} text={question.review} darkMode={darkMode} />
+                        </td>
+                        <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800 text-indigo-200" : "border-indigo-100 text-gray-700"}`}>
+                          {question.rating}
+                        </td>
+                        <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800 text-indigo-200" : "border-indigo-100 text-gray-700"}`}>
+                          {new Date(question.solvedDate).toLocaleDateString()}
+                        </td>
+                        <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800 text-indigo-300" : "border-indigo-100 text-indigo-700"}`}>
+                          {question.tags.join(', ')}
+                        </td>
+                        <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800" : "border-indigo-100"}`}>
+                          <a
+                            href={question.url}
+                            className={`underline font-medium transition-colors duration-150 ${darkMode ? "text-indigo-300 hover:text-indigo-100" : "text-indigo-600 hover:text-indigo-900"}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Link
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </main>
+      </div>
+    </>
   );
 };
 
-export default QuestionByTag; 
+export default QuestionByTag;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FiSun, FiMoon } from "react-icons/fi";
+import Dashboard from '../pages/Dashboard';
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
   const token = localStorage.getItem('token');
@@ -33,7 +34,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token');``
     window.location.href = '/login';
   };
 
@@ -42,10 +43,13 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
         
         {/* Logo and User Section */}
+        
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <Link to="/" className="flex items-center gap-2">
           <span className={`text-2xl font-bold tracking-tight ${darkMode ? "text-indigo-300" : "text-indigo-600"}`}>
             TrackDSA
           </span>
+          </Link>
 
           {loading ? (
             <span className={`${darkMode ? "text-gray-400" : "text-gray-600"} animate-pulse`}>

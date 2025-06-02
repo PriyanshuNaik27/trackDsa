@@ -271,7 +271,7 @@ const Dashboard = () => {
                               {q.questionName}
                             </td>
                             <td className={`px-4 py-2 border-b text-center ${darkMode ? "border-gray-800" : "border-indigo-100"}`}>
-                              <Review text={q.review} darkMode={darkMode} />
+                              <Review  questionName={q.questionName} text={q.review} darkMode={darkMode} />
                             </td>
                             <td className={`px-4 py-2 border-b ${darkMode ? "border-gray-800 text-indigo-200" : "border-indigo-100 text-gray-700"}`}>
                               {q.rating}
