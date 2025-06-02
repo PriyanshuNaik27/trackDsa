@@ -8,26 +8,27 @@ import Navbar from '../components/Navbar';
 import UpcomingContest from '../pages/UpcomingContest';
 import QuestionsByTag from "../pages/QuestionsByTag";
 
-const AppRouter = ({ token, setToken }) => {
+const AppRouter = ({ token, setToken , darkMode, toggleDarkMode }) => {
   return (
     <Router>
       <Routes>
         {/* Root route that redirects based on the token */}
-        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-        
+        <Route path="/" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+
         {/* Login route */}
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        
+        <Route path="/login" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<Login setToken={setToken} />} />
+
         {/* Register route */}
-        <Route path="/register" element={<Register setToken={setToken} />} />
-        
+        <Route path="/register" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<Register setToken={setToken} />} />
+
         {/* Dashboard route */}
         <Route
           path="/dashboard"
+          darkMode={darkMode} toggleDarkMode={toggleDarkMode} 
           element={token ? <Dashboard /> : <Navigate to="/login" />}
         />
-        <Route path="/questions" element={<QuestionsByTag />} />
-        <Route path="/UpcomingContests" element={<UpcomingContest />} />
+        <Route path="/questions" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<QuestionsByTag />} />
+        <Route path="/UpcomingContests" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<UpcomingContest />} />
 
         {/* 404 Page Not Found */}
         <Route path="*" element={<div className="p-8 text-center text-xl text-red-500">404 - Page Not Found</div>} />

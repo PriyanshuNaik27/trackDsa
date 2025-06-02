@@ -11,7 +11,16 @@ const QuestionByTag = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
   const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     const fetchQuestionsByTag = async () => {
@@ -38,38 +47,38 @@ const QuestionByTag = () => {
     if (tag) {
       fetchQuestionsByTag();
     }
-  }, [tag]);
+  }, [tag, token]);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-800">
-        Questions tagged with: <span className="text-blue-600">{tag}</span>
+    <div className={`max-w-6xl mx-auto p-6 shadow-lg rounded-lg transition-colors duration-300 ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+      <h1 className={`text-2xl font-semibold mb-6 ${darkMode ? "text-indigo-200" : "text-gray-800"}`}>
+        Questions tagged with: <span className={darkMode ? "text-indigo-400" : "text-blue-600"}>{tag}</span>
       </h1>
       {loading && <LoadingSpinner />}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+          <table className={`min-w-full border rounded-lg ${darkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"}`}>
             <thead>
               <tr>
-                <th className="px-4 py-2 border-b text-left text-gray-700">Name</th>
-                <th className="px-4 py-2 border-b text-left text-gray-700">Review</th>
-                <th className="px-4 py-2 border-b text-left text-gray-700">Rating</th>
-                <th className="px-4 py-2 border-b text-left text-gray-700">Solved Date</th>
-                <th className="px-4 py-2 border-b text-left text-gray-700">Tags</th>
-                <th className="px-4 py-2 border-b text-left text-gray-700">URL</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Name</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Review</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Rating</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Solved Date</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>Tags</th>
+                <th className={`px-4 py-2 border-b text-left ${darkMode ? "text-indigo-200 border-gray-700" : "text-gray-700"}`}>URL</th>
               </tr>
             </thead>
             <tbody>
               {questions.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-4 text-gray-500">
+                  <td colSpan={6} className={`text-center py-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                     No questions found for this tag.
                   </td>
                 </tr>
               ) : (
                 questions.map((question) => (
-                  <tr key={question._id} className="hover:bg-gray-50">
+                  <tr key={question._id} className={darkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"}>
                     <td className="px-4 py-2 border-b">{question.questionName}</td>
                     <td className="px-4 py-2 border-b">{question.review}</td>
                     <td className="px-4 py-2 border-b">{question.rating}</td>
@@ -80,7 +89,7 @@ const QuestionByTag = () => {
                     <td className="px-4 py-2 border-b">
                       <a
                         href={question.url}
-                        className="text-blue-500 hover:underline"
+                        className={`hover:underline text-sm ${darkMode ? "text-indigo-300" : "text-blue-500"}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -98,4 +107,4 @@ const QuestionByTag = () => {
   );
 };
 
-export default QuestionByTag;
+export default QuestionByTag; 

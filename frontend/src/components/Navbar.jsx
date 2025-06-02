@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import UpcomingContest from '../pages/UpcomingContest';
+import { FiSun, FiMoon } from "react-icons/fi";
 
-const Navbar = () => {
+const Navbar = ({ darkMode, toggleDarkMode }) => {
   const token = localStorage.getItem('token');
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ const Navbar = () => {
         if (response.data.data) {
           setUserName(response.data.data.fullName);
         } else {
-          setError('username not found');
+          setError('Username not found');
         }
       } catch (error) {
         setError('Error fetching username');
@@ -32,32 +32,70 @@ const Navbar = () => {
     else setError('No token found.');
   }, [token]);
 
-  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login'; // or use your router's navigate
+    window.location.href = '/login';
   };
 
   return (
-    <nav style={{ padding: '1rem', background: '#f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div>
-        {loading ? (
-          <p>Loading user...</p>
-        ) : error ? (
-          <p style={{ color: 'red' }}>{error}</p>
-        ) : (
-          <p>Welcome, {userName} </p>
-        )}
-      </div>
-      <div>
-      <Link to="/Upcomingcontests">Upcoming Contests</Link>
-      </div>
-      {token && (
-        <button onClick={handleLogout} style={{ padding: '0.5rem 1rem', background: '#e53e3e', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Logout
-        </button>
-      )}
-    </nav>
+    <header className={`shadow-md ${darkMode ? "bg-gray-900" : "bg-white"} transition-colors duration-300`}>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+        
+        {/* Logo and User Section */}
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <span className={`text-2xl font-bold tracking-tight ${darkMode ? "text-indigo-300" : "text-indigo-600"}`}>
+            TrackDSA
+          </span>
+
+          {loading ? (
+            <span className={`${darkMode ? "text-gray-400" : "text-gray-600"} animate-pulse`}>
+              Loading user...
+            </span>
+          ) : error ? (
+            <span className="text-red-500 text-sm">{error}</span>
+          ) : (
+            <span className={`text-sm sm:text-base font-medium ${darkMode ? "text-gray-200" : "text-gray-700"}`}>
+              Welcome, <span className={darkMode ? "text-indigo-200" : "text-indigo-700"}>{userName}</span>
+            </span>
+          )}
+        </div>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end">
+          <Link
+            to="/Upcomingcontests"
+            className={`font-semibold text-sm sm:text-base transition-colors duration-200 
+              ${darkMode ? "text-indigo-300 hover:text-indigo-100" : "text-indigo-600 hover:text-indigo-800"}`}
+          >
+            Upcoming Contests
+          </Link>
+
+          <button
+            onClick={toggleDarkMode}
+            className="text-2xl p-1 rounded-full transition hover:scale-105"
+            title="Toggle Theme"
+          >
+            {darkMode ? (
+              <FiSun className="text-yellow-300" />
+            ) : (
+              <FiMoon className="text-gray-700" />
+            )}
+          </button>
+
+          {token && (
+            <button
+              onClick={handleLogout}
+              className={`px-4 py-2 text-sm rounded-md font-semibold shadow transition duration-200
+                ${darkMode
+                  ? "bg-indigo-700 text-white hover:bg-indigo-600"
+                  : "bg-indigo-600 text-white hover:bg-indigo-700"}`}
+            >
+              Logout
+            </button>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 };
 

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { FaRegCommentDots } from "react-icons/fa";
 
-const Review = ({ text }) => {
+const Review = ({ text, darkMode }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <button
         type="button"
-        className="text-indigo-500 hover:text-indigo-700"
+        className={`text-indigo-500 hover:text-indigo-700 ${darkMode ? "dark:text-indigo-300 dark:hover:text-indigo-100" : ""}`}
         onClick={() => setOpen(true)}
         title="Show Review"
       >
@@ -16,19 +16,19 @@ const Review = ({ text }) => {
       </button>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+          <div className={`rounded-lg shadow-lg max-w-md w-full p-6 relative ${darkMode ? "bg-gray-900" : "bg-white"}`}>
             <button
-              className="absolute top-2 right-3 text-gray-400 hover:text-indigo-600 text-2xl"
+              className={`absolute top-2 right-3 text-gray-400 hover:text-indigo-600 text-2xl ${darkMode ? "dark:text-gray-300 dark:hover:text-indigo-400" : ""}`}
               onClick={() => setOpen(false)}
               aria-label="Close"
             >
               &times;
             </button>
-            <h4 className="text-lg font-semibold mb-2 text-indigo-700 flex items-center gap-2">
+            <h4 className={`text-lg font-semibold mb-2 flex items-center gap-2 ${darkMode ? "text-indigo-200" : "text-indigo-700"}`}>
               <FaRegCommentDots /> Review
             </h4>
-            <div className="text-gray-700 whitespace-pre-line break-words">
-              {text || <span className="italic text-gray-400">No review</span>}
+            <div className={`whitespace-pre-line break-words ${darkMode ? "text-gray-200" : "text-gray-700"}`}>
+              {text || <span className={`italic ${darkMode ? "text-gray-400" : "text-gray-400"}`}>No review</span>}
             </div>
           </div>
         </div>
