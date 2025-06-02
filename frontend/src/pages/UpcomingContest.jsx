@@ -7,6 +7,9 @@ const CodeforcesContests = ({ darkMode, toggleDarkMode }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+
+   
+    
     const fetchCodeforcesContests = async () => {
       try {
         const response = await fetch("https://codeforces.com/api/contest.list");

@@ -17,13 +17,7 @@ const QuestionByTag = () => {
   const token = localStorage.getItem('token');
   const [review, setReview] = useState('');
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+
 
   useEffect(() => {
     const fetchQuestionsByTag = async () => {

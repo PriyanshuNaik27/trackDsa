@@ -12,27 +12,23 @@ const AppRouter = ({ token, setToken , darkMode, toggleDarkMode }) => {
   return (
     <Router>
       <Routes>
-        {/* Root route that redirects based on the token */}
-        <Route path="/" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-
-        {/* Login route */}
-        <Route path="/login" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<Login setToken={setToken} />} />
-
-        {/* Register route */}
-        <Route path="/register" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<Register setToken={setToken} />} />
-
-        {/* Dashboard route */}
-        <Route
-          path="/dashboard"
-          darkMode={darkMode} toggleDarkMode={toggleDarkMode} 
-          element={token ? <Dashboard /> : <Navigate to="/login" />}
-        />
-        <Route path="/questions" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<QuestionsByTag />} />
-        <Route path="/UpcomingContests" darkMode={darkMode} toggleDarkMode={toggleDarkMode} element={<UpcomingContest />} />
-
-        {/* 404 Page Not Found */}
-        <Route path="*" element={<div className="p-8 text-center text-xl text-red-500">404 - Page Not Found</div>} />
-      </Routes>
+  <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+  <Route path="/login" element={<Login setToken={setToken} />} />
+  <Route path="/register" element={<Register setToken={setToken} />} />
+  <Route
+    path="/dashboard"
+    element={token ? <Dashboard darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> : <Navigate to="/login" />}
+  />
+  <Route
+    path="/questions"
+    element={<QuestionsByTag darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+  />
+  <Route
+    path="/UpcomingContests"
+    element={<UpcomingContest darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+  />
+  <Route path="*" element={<div className="p-8 text-center text-xl text-red-500">404 - Page Not Found</div>} />
+</Routes>
     </Router>
   );
 };
