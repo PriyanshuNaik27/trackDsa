@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();  // Load environment variables from .env file
 const connectDB = require('./src/config/db');
 const heatmapRoutes = require('./src/routes/heatmap');
+const codeforcesRoutes = require('./src/routes/codeforces'); // Ensure this file exists
 
 const authRoutes = require('./src/routes/auth.routes');
 const questionRoutes = require('./src/routes/question.routes');
@@ -36,6 +37,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
+app.use('/api/codeforces',codeforcesRoutes); // Ensure this file exists);
 
 app.use('/api/heatmap', heatmapRoutes);
 
