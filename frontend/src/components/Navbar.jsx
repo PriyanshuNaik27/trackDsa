@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiSun, FiMoon } from "react-icons/fi";
 import Dashboard from '../pages/Dashboard';
 
+
 const Navbar = ({ darkMode, toggleDarkMode }) => {
   const token = localStorage.getItem('token');
   const [userName, setUserName] = useState('');
@@ -48,6 +49,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           <Link to="/" className="flex items-center gap-2">
           <span className={`text-2xl font-bold tracking-tight ${darkMode ? "text-indigo-300" : "text-indigo-600"}`}>
             TrackDSA
+          </span>
+          </Link>
+          <Link to="/heatmap" className="flex items-center gap-2">
+          <span className={`text-2xl font-bold tracking-tight ${darkMode ? "text-indigo-300" : "text-indigo-600"}`}>
+            progress
           </span>
           </Link>
 

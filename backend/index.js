@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();  // Load environment variables from .env file
 const connectDB = require('./src/config/db');
+const heatmapRoutes = require('./src/routes/heatmap');
 
 const authRoutes = require('./src/routes/auth.routes');
 const questionRoutes = require('./src/routes/question.routes');
@@ -35,6 +36,9 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
+
+app.use('/api/heatmap', heatmapRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Track DSA Server is running');

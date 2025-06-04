@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Heatmap from '../components/Heatmap';
 
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -26,6 +27,10 @@ const AppRouter = ({ token, setToken , darkMode, toggleDarkMode }) => {
   <Route
     path="/UpcomingContests"
     element={<UpcomingContest darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+  />
+  <Route
+    path="/heatmap"
+    element={<Heatmap darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
   />
   <Route path="*" element={<div className="p-8 text-center text-xl text-red-500">404 - Page Not Found</div>} />
 </Routes>

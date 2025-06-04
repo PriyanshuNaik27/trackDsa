@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: 6
   },
- 
+  
   Questions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Question'
