@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Heatmap() {
   const [handle, setHandle] = useState(() => {
@@ -13,7 +14,7 @@ function Heatmap() {
     if (!usedHandle) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/codeforces/${usedHandle}`);
+      const res = await fetch(`${apiUrl}/api/codeforces/${usedHandle}`);
       const json = await res.json();
       setData(json);
     } catch (error) {

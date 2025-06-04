@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FiSun, FiMoon } from "react-icons/fi";
+const apiUrl = import.meta.env.VITE_API_URL;
 import Dashboard from '../pages/Dashboard';
 
 
@@ -15,7 +16,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
     const fetchUserName = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/users/profile', {
+      const response = await axios.get( `${apiUrl}/api/auth/users/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.data) {
